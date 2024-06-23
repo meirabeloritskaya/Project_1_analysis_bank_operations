@@ -37,5 +37,3 @@ if __name__ == "__main__":
 
     for trans in list_trans:
         print(trans)
-
-
