@@ -13,10 +13,12 @@ file_formatter = logging.Formatter(
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_data_transactions(path):
-    logger = logging.getLogger(__name__)
+    """чтение файла с транзакциями"""
+
     try:
         df = pd.read_excel(path)
         logger.info(f"открытие файла {path}")
@@ -35,5 +37,4 @@ if __name__ == "__main__":
     list_trans = get_data_transactions(path)
 
     for trans in list_trans:
-     print(trans)
-
+        print(trans)
