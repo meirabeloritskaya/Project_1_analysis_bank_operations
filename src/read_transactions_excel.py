@@ -13,7 +13,6 @@ file_formatter = logging.Formatter(
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 def get_data_transactions(path):
