@@ -92,7 +92,20 @@ def top_5_trans_by_amount(path):
     return top_details
 
 
-def get_exchange_rate(api_key, BASE_URL):
+def read_user_settings(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            user_settings = json.load(f)
+            return user_settings
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found.")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON from '{file_path}': {e}")
+        return None
+
+
+def get_exchange_rate(api_key, BASE_URL, user_currencies):
     try:
         url = f"{BASE_URL}{api_key}/latest/RUB"
         response = requests.get(url)
@@ -102,35 +115,29 @@ def get_exchange_rate(api_key, BASE_URL):
             raise Exception(f"Error fetching exchange rate: {data['error-type']}")
 
         rates = data["conversion_rates"]
-        usd_to_rub = rates.get("USD")
-        eur_to_rub = rates.get("EUR")
-        if usd_to_rub is None or eur_to_rub is None:
-            raise Exception("Currency rates not found")
+        result = []
 
-        usd_rate = round(1 / usd_to_rub, 2)
-        eur_rate = round(1 / eur_to_rub, 2)
-
-        result = [
-            {"currency": "USD", "rate": usd_rate},
-            {"currency": "EUR", "rate": eur_rate},
-        ]
-
+        for currency in user_currencies:
+            if currency in rates:
+                rate = round(1 / rates[currency], 2)
+                result.append({"currency": currency, "rate": rate})
+            else:
+                print(f"Currency rate for {currency} not found in API response.")
         return result
     except Exception as e:
         print(e)
         return None
 
 
-def get_stock_prices():
-    symbols = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
+def get_stock_prices(user_stocks):
+
     prices = []
 
-    for symbol in symbols:
+    for symbol in user_stocks:
         try:
             stock = yf.Ticker(symbol)
             data = stock.info
 
-            # Проверяем, есть ли поле 'currentPrice' в полученных данных
             if "currentPrice" in data:
                 stock_info = {"stock": symbol, "price": data["currentPrice"]}
                 prices.append(stock_info)
