@@ -6,7 +6,7 @@ from read_transactions_excel import get_data_transactions
 
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler(
-    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/views.log",
+    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/services.log",
     encoding="utf-8",
 )
 file_formatter = logging.Formatter(
