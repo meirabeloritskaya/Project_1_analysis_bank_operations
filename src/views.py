@@ -2,6 +2,13 @@ import logging
 from datetime import datetime
 from read_transactions_excel import get_data_transactions
 import pandas as pd
+import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+MY_API_KEY = os.getenv("API_KEY")
+MY_BASE_URL = os.getenv("BASE_URL")
 
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler(
@@ -80,6 +87,35 @@ def top_5_trans_by_amount(path):
     return top_details
 
 
+def get_exchange_rate(api_key, BASE_URL):
+    try:
+        url = f"{BASE_URL}{api_key}/latest/RUB"
+        response = requests.get(url)
+        data = response.json()
+
+        if response.status_code != 200:
+            raise Exception(f"Error fetching exchange rate: {data['error-type']}")
+
+        rates = data["conversion_rates"]
+        usd_to_rub = rates.get("USD")
+        eur_to_rub = rates.get("EUR")
+        if usd_to_rub is None or eur_to_rub is None:
+            raise Exception("Currency rates not found")
+
+        usd_rate = round(1 / usd_to_rub, 2)
+        eur_rate = round(1 / eur_to_rub, 2)
+
+        result = (
+            f"currency: 'USD',\nrate: {usd_rate}\n"
+            f"currency: 'EUR',\nrate: {eur_rate}"
+        )
+
+        return result
+    except Exception as e:
+        print(e)
+        return None
+
+
 if __name__ == "__main__":
     my_date = "16.02.2018 00:00:00"
     my_path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
@@ -90,3 +126,5 @@ if __name__ == "__main__":
     print(*my_data_by_date, sep="\n")
     my_top_5_trans_by_amount = top_5_trans_by_amount(my_path)
     print(*my_top_5_trans_by_amount, sep="\n")
+    my_exchange_rate = get_exchange_rate(MY_API_KEY, MY_BASE_URL)
+    print(my_exchange_rate)
