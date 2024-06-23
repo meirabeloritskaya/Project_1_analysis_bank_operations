@@ -1,42 +1,52 @@
-import logging
 
-import pandas as pd
+import yfinance as yf
+import json
 
-logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(
-    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/read_transactions_excel.log",
-    encoding="utf-8",
+
+def get_stock_prices():
+    symbols = ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
+    prices = []
+
+    for symbol in symbols:
+        try:
+            stock = yf.Ticker(symbol)
+            data = stock.info
+
+            # Проверяем, есть ли поле 'currentPrice' в полученных данных
+            if "currentPrice" in data:
+                stock_info = {"stock": symbol, "price": data["currentPrice"]}
+                prices.append(stock_info)
+            else:
+                print(f"Цена акции {symbol} не найдена")
+
+        except Exception as e:
+            print(f"Ошибка при получении данных для акции {symbol}: {str(e)}")
+
+    return prices
+
+
+def json_result(greeting, transactions, top_transactions, exchange_rate, stock_prices):
+    result = {
+        "greeting": greeting,
+        "cards": transactions,
+        "top_transactions": top_transactions,
+        "currency_rates": exchange_rate,
+        "stock_prices": stock_prices,
+    }
+    return json.dumps(result, ensure_ascii=False, indent=4)
+
+
+# Пример использования:
+my_greeting = "Доброе утро!"
+my_transactions = ["транзакция 1", "транзакция 2", "транзакция 3"]
+my_top_transactions = ["топ транзакция 1", "топ транзакция 2", "топ транзакция 3"]
+my_exchange_rate = {"currency": "USD", "rate": 87.11}
+
+# Получаем цены акций
+my_stock_prices = get_stock_prices()
+
+# Формируем и печатаем JSON
+my_json_result = json_result(
+    my_greeting, my_transactions, my_top_transactions, my_exchange_rate, my_stock_prices
 )
-file_formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
-)
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
-logger.setLevel(logging.INFO)
-
-
-def get_data_transactions(path):
-    """чтение файла с транзакциями"""
-
-    try:
-        df = pd.read_excel(path)
-        logger.info(f"открытие файла {path}")
-        logger.info("Получение информации о транзакциях")
-        return df.to_dict(orient="records")
-    except FileNotFoundError:
-        logger.error(f"путь к файлу {path} не найден")
-        return "{}"
-    except ValueError as e:
-        logger.error(f"Ошибка при парсинге Excel файла: {str(e)}")
-        return "{}"
-
-
-if __name__ == "__main__":
-    path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
-    list_trans = get_data_transactions(path)
-
-    for trans in list_trans:
-        print(trans)
-
-
-
+print(my_json_result)
