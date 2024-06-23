@@ -38,6 +38,8 @@ def greeting():
 
 
 def calculate_cashback(amount):
+    """проверяем , что транзакция была тратой"""
+    logger.info("проверяем , что транзакция была тратой")
     if amount < 0:
         return round(abs(amount) / 100)
     else:
@@ -73,6 +75,8 @@ def get_transactions_by_date(transactions, date):
 
 
 def top_5_trans_by_amount(path):
+    """вывод топ 5 транзакций по сумме платежа"""
+    logger.info("вывод топ 5 транзакций по сумме платежа")
     df = pd.read_excel(path)
     top_5_transactions = df.nlargest(5, "Сумма платежа")
     top_details = []
@@ -93,6 +97,8 @@ def top_5_trans_by_amount(path):
 
 
 def read_user_settings(file_path):
+    """чтение user_settings"""
+    logger.info("чтение user_settings")
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             user_settings = json.load(f)
@@ -106,6 +112,8 @@ def read_user_settings(file_path):
 
 
 def get_exchange_rate(api_key, BASE_URL, user_currencies):
+    """получение курса USD  и EUR"""
+    logger.info("получение курса USD  и EUR ")
     try:
         url = f"{BASE_URL}{api_key}/latest/RUB"
         response = requests.get(url)
@@ -130,7 +138,8 @@ def get_exchange_rate(api_key, BASE_URL, user_currencies):
 
 
 def get_stock_prices(user_stocks):
-
+    """получение курса stock_prices"""
+    logger.info("получение курса stock_prices ")
     prices = []
 
     for symbol in user_stocks:
@@ -150,6 +159,8 @@ def get_stock_prices(user_stocks):
 
 
 def json_result(greeting, transactions, top_transactions, exchange_rate, stock_prices):
+    """вывод всей собранной информации в JSON формате"""
+    logger.info("вывод всей собранной информации в JSON формате ")
     result = {
         "greeting": greeting,
         "cards": transactions,
