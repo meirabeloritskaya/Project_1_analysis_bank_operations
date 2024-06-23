@@ -1,4 +1,5 @@
 import logging
+import json
 from datetime import datetime
 from read_transactions_excel import get_data_transactions
 import pandas as pd
@@ -105,10 +106,10 @@ def get_exchange_rate(api_key, BASE_URL):
         usd_rate = round(1 / usd_to_rub, 2)
         eur_rate = round(1 / eur_to_rub, 2)
 
-        result = (
-            f"currency: 'USD',\nrate: {usd_rate}\n"
-            f"currency: 'EUR',\nrate: {eur_rate}"
-        )
+        result = [
+            {"currency": "USD", "rate": usd_rate},
+            {"currency": "EUR", "rate": eur_rate},
+        ]
 
         return result
     except Exception as e:
@@ -116,15 +117,30 @@ def get_exchange_rate(api_key, BASE_URL):
         return None
 
 
+def json_result(greeting, transactions, top_transactions, exchange_rate):
+    result = {
+        "greeting": greeting,
+        "cards": transactions,
+        "top_transactions": top_transactions,
+        "currency_rates": exchange_rate,
+    }
+    return json.dumps(result, indent=4, ensure_ascii=False)
+
+
 if __name__ == "__main__":
     my_date = "16.02.2018 00:00:00"
     my_path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
-    print(greeting())
+    my_greeting = greeting()
+    # print(my_greeting)
     my_transactions = get_data_transactions(my_path)
     my_data_by_date = get_transactions_by_date(my_transactions, my_date)
     # print(my_data_by_date)
-    print(*my_data_by_date, sep="\n")
+    # print(*my_data_by_date, sep="\n")
     my_top_5_trans_by_amount = top_5_trans_by_amount(my_path)
-    print(*my_top_5_trans_by_amount, sep="\n")
+    # print(*my_top_5_trans_by_amount, sep="\n")
     my_exchange_rate = get_exchange_rate(MY_API_KEY, MY_BASE_URL)
-    print(my_exchange_rate)
+    # print(my_exchange_rate)
+    my_json_result = json_result(
+        my_greeting, my_data_by_date, my_top_5_trans_by_amount, my_exchange_rate
+    )
+    print(my_json_result)
