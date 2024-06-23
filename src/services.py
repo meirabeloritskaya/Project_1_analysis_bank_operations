@@ -1,21 +1,33 @@
 from datetime import datetime
 import math
-from typing import List, Dict, Any
+import logging
 from read_transactions_excel import get_data_transactions
 
 
-def investment_bank(
-    month: str, transactions: List[Dict[str, Any]], limit: int
-) -> float:
+logger = logging.getLogger(__name__)
+file_handler = logging.FileHandler(
+    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/views.log",
+    encoding="utf-8",
+)
+file_formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
+)
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+logger.setLevel(logging.INFO)
+
+
+def investment_bank(month, transactions, limit):
+    """вывод суммы инвесткопилки, заданной лимитом и месяцем"""
+    logger.info("формирование списка транзакций, по заданному месяцу ")
     total_savings = 0.0
     month_start = datetime.strptime(month, "%Y-%m")
 
     for transaction in transactions:
         date_str = transaction.get("Дата платежа")
 
-        # Пропускаем транзакцию, если дата не является строкой или содержит "nan"
         if not isinstance(date_str, str) or date_str.lower() == "nan":
-
+            logger.info("отсутсвует дата транзакции")
             continue
 
         try:
@@ -26,12 +38,16 @@ def investment_bank(
             ):
                 amount = transaction["Сумма операции"]
                 # print(transaction)
+
+                if amount >= 0:
+                    logger.info("положительная транзакция")
+                    continue
                 rounded_amount = math.ceil(amount / limit) * limit
                 difference = rounded_amount - amount
                 total_savings += difference
         except ValueError:
             print(f"Invalid date format: {date_str}")
-
+    logger.info("вывод суммы инвесткопилки, заданной лимитом и месяцем")
     return round(total_savings, 2)
 
 
