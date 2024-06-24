@@ -18,12 +18,13 @@ logger.setLevel(logging.INFO)
 
 def get_valid_month():
     """Функция для ввода корректного месяца и года."""
-    print('Выберите условия для вашей инвесткопилки!')
+    print("Выберите условия для вашей инвесткопилки!")
     while True:
         input_date = input(
             "Для этого введите месяц и год в формате гггг-мм за период 2018-2021: "
         ).strip()
         try:
+            logger.info("Преобразование даты в формат datetime")
             datetime_obj = datetime.strptime(input_date, "%Y-%m")
             if 2018 <= datetime_obj.year <= 2021:
                 return datetime_obj
@@ -41,7 +42,7 @@ def get_limit():
         print("2. 50 руб")
         print("3. 100 руб")
         choice = input("Введите номер выбранного лимита: ").strip()
-
+        logger.info("выбор лимита для инвесткопилки")
         if choice == "1":
             return 10
         elif choice == "2":

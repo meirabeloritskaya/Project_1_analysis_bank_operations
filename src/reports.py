@@ -21,6 +21,7 @@ logger.setLevel(logging.INFO)
 
 def report_to_file(filename="file_report.json"):
     """Декоратор записывает данные по отчету в файл"""
+    logger.info("создан декоратор для отчетов")
 
     def decorator(func):
         @functools.wraps(func)
@@ -87,7 +88,9 @@ def get_unique_categories(transactions):
 
 def choose_category(categories):
     """Функция для выбора категории из списка"""
-    print("Предлагаю посмотреть отчет за траты по категориям за 3-х месячный период с указаной  вами датой!")
+    print(
+        "Предлагаю посмотреть отчет за траты по категориям за 3-х месячный период с указаной  вами датой!"
+    )
     print("Для этого выберите категорию из списка:")
     for idx, category in enumerate(categories):
         print(f"{idx + 1}. {category}")
@@ -126,5 +129,6 @@ def my_reports():
     result = spending_by_category(transactions, category, date.strftime("%d.%m.%Y"))
     print(*result, sep="\n")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print(my_reports())
