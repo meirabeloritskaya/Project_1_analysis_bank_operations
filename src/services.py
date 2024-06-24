@@ -75,7 +75,7 @@ def investment_bank(month_start, transactions, limit):
 
                 if amount >= 0:
                     logger.info("Положительная транзакция, пропуск")
-                    print(0)
+                    continue
                 else:
                     modul_amount = -amount
                     rounded_amount = math.ceil(modul_amount / limit) * limit
