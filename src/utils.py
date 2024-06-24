@@ -46,6 +46,20 @@ def calculate_cashback(amount):
         return 0
 
 
+def get_valid_date():
+    while True:
+        input_date = input(
+            "Введите дату в формате дд.мм.гггг за период 2018 - 2021: "
+        ).strip()
+        try:
+            datetime_obj = datetime.strptime(input_date, "%d.%m.%Y")
+            if 2018 <= datetime_obj.year <= 2021:
+                formatted_date = datetime_obj.strftime("%d.%m.%Y %H:%M:%S")
+                return formatted_date
+        except ValueError:
+            print("Некорректный формат даты")
+
+
 def get_transactions_by_date(transactions, date):
     """вывод номера карты, суммы операций, кешбек"""
     logger.info("вывод номера карты, суммы операций, кешбек")
