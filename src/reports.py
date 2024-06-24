@@ -87,7 +87,8 @@ def get_unique_categories(transactions):
 
 def choose_category(categories):
     """Функция для выбора категории из списка"""
-    print("Выберите категорию из списка:")
+    print("Предлагаю посмотреть отчет за траты по категориям за 3-х месячный период с указаной  вами датой!")
+    print("Для этого выберите категорию из списка:")
     for idx, category in enumerate(categories):
         print(f"{idx + 1}. {category}")
 
@@ -124,3 +125,6 @@ def my_reports():
 
     result = spending_by_category(transactions, category, date.strftime("%d.%m.%Y"))
     print(*result, sep="\n")
+
+if __name__ == '__main__':
+    print(my_reports())
