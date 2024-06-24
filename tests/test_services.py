@@ -40,4 +40,3 @@ if __name__ == "__main__":
     test_get_valid_month()
     test_get_limit()
     test_investment_bank()
-
