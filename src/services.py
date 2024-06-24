@@ -75,11 +75,13 @@ def investment_bank(month_start, transactions, limit):
 
                 if amount >= 0:
                     logger.info("Положительная транзакция, пропуск")
-                    continue
+                    print(0)
+                else:
+                    modul_amount = -amount
+                    rounded_amount = math.ceil(modul_amount / limit) * limit
+                    difference = rounded_amount - modul_amount
+                    total_savings += difference
 
-                rounded_amount = math.ceil(amount / limit) * limit
-                difference = rounded_amount - amount
-                total_savings += difference
         except ValueError:
             logger.error(f"Ошибка формата даты: {date_str}")
             continue
