@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 import functools
 from read_transactions_excel import get_data_transactions
+import json
 
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler(
@@ -17,16 +18,21 @@ logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
 
 
-def report_to_file(filename="file_report.txt"):
+def report_to_file(filename="file_report.json"):
     """Декоратор записывает данные по отчету в файл"""
 
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
-            with open(filename, "w", encoding="utf-8") as f:
-                f.write(str(result))
-                logger.info("записан результат отчета в файл")
+            for entry in result:
+                entry["Дата операции"] = entry["Дата операции"].strftime(
+                    "%d.%m.%Y %H:%M:%S"
+                )
+            with open(filename, "w+", encoding="utf-8") as f:
+                # f.write(str(result))
+                json.dump(result, f, ensure_ascii=False, indent=4)
+                logger.info("Результат отчета записан в файл в формате JSON")
             return result
 
         return wrapper
@@ -34,7 +40,7 @@ def report_to_file(filename="file_report.txt"):
     return decorator
 
 
-@report_to_file("file_report.txt")
+@report_to_file("report.json")
 def spending_by_category(transactions, category, date=None):
     """Функция возвращает траты по категориям за указанный месяц"""
     try:
@@ -49,9 +55,9 @@ def spending_by_category(transactions, category, date=None):
             end_date = datetime.strptime(date, "%d.%m.%Y")
 
         # Начало и конец месяца для фильтрации
-        start_date = end_date.replace(day=1)
-        next_month = end_date.replace(day=28) + pd.DateOffset(days=4)
-        end_date = next_month - pd.DateOffset(days=next_month.day)
+        end_date_month = end_date.month
+        start_month = end_date_month - 3
+        start_date = end_date.replace(month=start_month)
 
         # Фильтрация транзакций по дате и категории
         filtered_transactions = transactions[
@@ -68,8 +74,8 @@ def spending_by_category(transactions, category, date=None):
 
         logger.info(f"Траты за указанный месяц по категории {category}")
 
-        print("Данные после фильтрации:")
-        print(filtered_transactions)
+        # print("Данные после фильтрации:")
+        # print(filtered_transactions)
 
         return filtered_transactions.to_dict(orient="records")
 
@@ -85,7 +91,7 @@ if __name__ == "__main__":
 
     transactions = pd.DataFrame(list_trans)
 
-    category = "Переводы"
+    category = "Супермаркеты"
     date = "30.12.2021"
 
     result = spending_by_category(transactions, category, date)
