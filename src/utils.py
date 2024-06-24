@@ -54,7 +54,7 @@ def get_valid_date():
     )
     while True:
         input_date = input(
-            "Введите дату в формате дд.мм.гггг за период 2018 - 2021: "
+            "Для этого введите дату в формате дд.мм.гггг за период 2018 - 2021: "
         ).strip()
         try:
             datetime_obj = datetime.strptime(input_date, "%d.%m.%Y")
