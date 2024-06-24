@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import functools
 from read_transactions_excel import get_data_transactions
 import json
@@ -55,9 +55,7 @@ def spending_by_category(transactions, category, date=None):
             end_date = datetime.strptime(date, "%d.%m.%Y")
 
         # Начало и конец месяца для фильтрации
-        end_date_month = end_date.month
-        start_month = end_date_month - 3
-        start_date = end_date.replace(month=start_month)
+        start_date = end_date - timedelta(days=3 * 30)
 
         # Фильтрация транзакций по дате и категории
         filtered_transactions = transactions[
@@ -92,7 +90,7 @@ if __name__ == "__main__":
     transactions = pd.DataFrame(list_trans)
 
     category = "Супермаркеты"
-    date = "30.12.2021"
+    date = "03.02.2021"
 
     result = spending_by_category(transactions, category, date)
     print(*result, sep="\n")
