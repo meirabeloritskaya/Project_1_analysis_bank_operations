@@ -41,7 +41,7 @@ def calculate_cashback(amount):
     """проверяем , что транзакция была тратой"""
     logger.info("проверяем , что транзакция была тратой")
     if amount < 0:
-        return round(abs(amount) / 100)
+        return abs(amount) // 100
     else:
         return 0
 
