@@ -5,6 +5,7 @@ import functools
 from read_transactions_excel import get_data_transactions
 import json
 
+# Настройка логирования
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler(
     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/reports.log",
@@ -30,7 +31,6 @@ def report_to_file(filename="file_report.json"):
                     "%d.%m.%Y %H:%M:%S"
                 )
             with open(filename, "w+", encoding="utf-8") as f:
-                # f.write(str(result))
                 json.dump(result, f, ensure_ascii=False, indent=4)
                 logger.info("Результат отчета записан в файл в формате JSON")
             return result
@@ -68,13 +68,10 @@ def spending_by_category(transactions, category, date=None):
         # Проверка, есть ли отфильтрованные данные
         if filtered_transactions.empty:
             logger.info("Нет данных для указанного периода и категории")
+            print("Нет данных для указанного периода и категории")
             return []
 
         logger.info(f"Траты за указанный месяц по категории {category}")
-
-        # print("Данные после фильтрации:")
-        # print(filtered_transactions)
-
         return filtered_transactions.to_dict(orient="records")
 
     except Exception as e:
@@ -83,14 +80,47 @@ def spending_by_category(transactions, category, date=None):
         return []
 
 
-if __name__ == "__main__":
+def get_unique_categories(transactions):
+    """Функция для получения уникальных категорий из транзакций"""
+    return transactions["Категория"].unique().tolist()
+
+
+def choose_category(categories):
+    """Функция для выбора категории из списка"""
+    print("Выберите категорию из списка:")
+    for idx, category in enumerate(categories):
+        print(f"{idx + 1}. {category}")
+
+    while True:
+        try:
+            choice = int(input("Введите номер категории: "))
+            if 1 <= choice <= len(categories):
+                return categories[choice - 1]
+            else:
+                print("Неверный номер категории. Попробуйте снова.")
+        except ValueError:
+            print("Некорректный ввод. Введите номер категории.")
+
+
+def get_valid_date():
+    """Функция для ввода корректной даты"""
+    while True:
+        input_date = input("Введите дату в формате дд.мм.гггг: ").strip()
+        try:
+            datetime_obj = datetime.strptime(input_date, "%d.%m.%Y")
+            return datetime_obj
+        except ValueError:
+            print("Некорректный формат даты. Попробуйте снова.")
+
+
+def my_reports():
     path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
     list_trans = get_data_transactions(path)
-
     transactions = pd.DataFrame(list_trans)
 
-    category = "Супермаркеты"
-    date = "03.02.2021"
+    categories = get_unique_categories(transactions)
+    category = choose_category(categories)
+    date = get_valid_date()
 
-    result = spending_by_category(transactions, category, date)
+    result = spending_by_category(transactions, category, date.strftime("%d.%m.%Y"))
     print(*result, sep="\n")

@@ -19,7 +19,9 @@ logger.setLevel(logging.INFO)
 def get_valid_month():
     """Функция для ввода корректного месяца и года."""
     while True:
-        input_date = input("Введите месяц и год в формате гггг-мм: ").strip()
+        input_date = input(
+            "Для этого введите месяц и год в формате гггг-мм за период 2018-2021: "
+        ).strip()
         try:
             datetime_obj = datetime.strptime(input_date, "%Y-%m")
             if 2018 <= datetime_obj.year <= 2021:
@@ -27,7 +29,7 @@ def get_valid_month():
             else:
                 print("Введите год в диапазоне 2018-2021.")
         except ValueError:
-            print("Некорректный формат даты.")
+            print("Некорректный формат даты. Попробуйте еще раз!")
 
 
 def get_limit():
@@ -84,7 +86,7 @@ def investment_bank(month_start, transactions, limit):
     return round(total_savings, 2)
 
 
-if __name__ == "__main__":
+def my_services():
     path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
     list_trans = get_data_transactions(path)  # Получаем данные транзакций из Excel
 
@@ -93,3 +95,7 @@ if __name__ == "__main__":
 
     total_savings = investment_bank(month_start, list_trans, limit)
     print(f"Сумма инвесткопилки за {month_start.strftime('%Y-%m')}: {total_savings}")
+
+
+if __name__ == "__main__":
+    print(my_services())
