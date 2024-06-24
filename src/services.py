@@ -1,10 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import math
 import logging
-from read_transactions_excel import (
-    get_data_transactions,
-)  # Предположим, что этот модуль импортирует функцию get_data_transactions из файла read_transactions_excel
-
+from read_transactions_excel import get_data_transactions
 
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler(
@@ -20,21 +17,41 @@ logger.setLevel(logging.INFO)
 
 
 def get_valid_month():
-    """Запрос и валидация ввода месяца и года в формате 'гггг-мм'."""
+    """Функция для ввода корректного месяца и года."""
     while True:
         input_date = input("Введите месяц и год в формате гггг-мм: ").strip()
         try:
             datetime_obj = datetime.strptime(input_date, "%Y-%m")
-            return (
-                datetime_obj  # Возвращаем объект datetime при успешном преобразовании
-            )
+            if 2018 <= datetime_obj.year <= 2021:
+                return datetime_obj
+            else:
+                print("Введите год в диапазоне 2018-2021.")
         except ValueError:
-            print("Некорректный формат даты. Попробуйте еще раз.")
+            print("Некорректный формат даты.")
+
+
+def get_limit():
+    """Функция для выбора лимита из предложенных значений."""
+    while True:
+        print("Выберите лимит для округления (10, 50, 100 руб):")
+        print("1. 10 руб")
+        print("2. 50 руб")
+        print("3. 100 руб")
+        choice = input("Введите номер выбранного лимита: ").strip()
+
+        if choice == "1":
+            return 10
+        elif choice == "2":
+            return 50
+        elif choice == "3":
+            return 100
+        else:
+            print("Некорректный выбор. Попробуйте еще раз.")
 
 
 def investment_bank(month_start, transactions, limit):
-    """Функция для расчета суммы инвесткопилки по заданному месяцу и лимиту."""
-    logger.info("Формирование списка транзакций по заданному месяцу и году")
+    """Функция для вычисления суммы инвесткопилки с заданным месяцем и лимитом."""
+    logger.info("Начало вычисления суммы инвесткопилки")
     total_savings = 0.0
 
     for transaction in transactions:
@@ -53,16 +70,17 @@ def investment_bank(month_start, transactions, limit):
                 amount = transaction["Сумма операции"]
 
                 if amount >= 0:
-                    logger.info("Положительная транзакция")
+                    logger.info("Положительная транзакция, пропуск")
                     continue
 
                 rounded_amount = math.ceil(amount / limit) * limit
                 difference = rounded_amount - amount
                 total_savings += difference
         except ValueError:
-            logger.error(f"Неверный формат даты: {date_str}")
+            logger.error(f"Ошибка формата даты: {date_str}")
+            continue
 
-    logger.info("Вычисление суммы инвесткопилки по заданному месяцу и лимиту")
+    logger.info("Вычисление суммы инвесткопилки завершено")
     return round(total_savings, 2)
 
 
@@ -71,7 +89,7 @@ if __name__ == "__main__":
     list_trans = get_data_transactions(path)  # Получаем данные транзакций из Excel
 
     month_start = get_valid_month()  # Запрашиваем у пользователя месяц и год
-    limit = 1000  # Пример лимита для округления
+    limit = get_limit()  # Запрашиваем у пользователя лимит для округления
 
     total_savings = investment_bank(month_start, list_trans, limit)
     print(f"Сумма инвесткопилки за {month_start.strftime('%Y-%m')}: {total_savings}")
