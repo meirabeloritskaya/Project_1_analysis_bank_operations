@@ -11,9 +11,7 @@ file_handler = logging.FileHandler(
     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/reports.log",
     encoding="utf-8",
 )
-file_formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
-)
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
@@ -28,9 +26,7 @@ def report_to_file(filename="file_report.json"):
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             for entry in result:
-                entry["Дата операции"] = entry["Дата операции"].strftime(
-                    "%d.%m.%Y %H:%M:%S"
-                )
+                entry["Дата операции"] = entry["Дата операции"].strftime("%d.%m.%Y %H:%M:%S")
             with open(filename, "w+", encoding="utf-8") as f:
                 json.dump(result, f, ensure_ascii=False, indent=4)
                 logger.info("Результат отчета записан в файл в формате JSON")
@@ -46,9 +42,7 @@ def spending_by_category(transactions, category, date=None):
     """Функция возвращает траты по категориям за указанный месяц"""
     try:
         # Преобразование столбца 'Дата операции' в формат datetime
-        transactions["Дата операции"] = pd.to_datetime(
-            transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S"
-        )
+        transactions["Дата операции"] = pd.to_datetime(transactions["Дата операции"], format="%d.%m.%Y %H:%M:%S")
 
         if date is None:
             end_date = datetime.now()
@@ -88,9 +82,7 @@ def get_unique_categories(transactions):
 
 def choose_category(categories):
     """Функция для выбора категории из списка"""
-    print(
-        "Предлагаю посмотреть отчет за траты по категориям за 3-х месячный период с указаной  вами датой!"
-    )
+    print("Предлагаю посмотреть отчет за траты по категориям за 3-х месячный период с указаной  вами датой!")
     print("Для этого выберите категорию из списка:")
     for idx, category in enumerate(categories):
         print(f"{idx + 1}. {category}")

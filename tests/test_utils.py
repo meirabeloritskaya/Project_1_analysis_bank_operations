@@ -139,9 +139,7 @@ def test_read_user_settings():
     file_path = "dummy_settings.json"
     dummy_settings = {"key": "value"}
 
-    with patch(
-        "builtins.open", unittest.mock.mock_open(read_data=json.dumps(dummy_settings))
-    ):
+    with patch("builtins.open", unittest.mock.mock_open(read_data=json.dumps(dummy_settings))):
         assert read_user_settings(file_path) == dummy_settings
 
     with patch("builtins.open", side_effect=FileNotFoundError):
@@ -213,12 +211,7 @@ def test_json_result():
         ensure_ascii=False,
     )
 
-    assert (
-        json_result(
-            greeting_msg, transactions, top_transactions, exchange_rate, stock_prices
-        )
-        == expected_result
-    )
+    assert json_result(greeting_msg, transactions, top_transactions, exchange_rate, stock_prices) == expected_result
 
 
 if __name__ == "__main__":

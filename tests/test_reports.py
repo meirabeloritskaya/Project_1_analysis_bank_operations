@@ -93,9 +93,7 @@ def test_get_unique_categories():
 
     expected_categories = ["Еда", "Транспорт"]
     result = get_unique_categories(transactions)
-    assert (
-        result == expected_categories
-    ), f"Expected {expected_categories}, but got {result}"
+    assert result == expected_categories, f"Expected {expected_categories}, but got {result}"
 
 
 @patch("builtins.input", side_effect=["1"])
@@ -103,9 +101,7 @@ def test_choose_category(mock_input):
     categories = ["Еда", "Транспорт"]
     expected_category = "Еда"
     result = choose_category(categories)
-    assert (
-        result == expected_category
-    ), f"Expected {expected_category}, but got {result}"
+    assert result == expected_category, f"Expected {expected_category}, but got {result}"
 
 
 @patch("builtins.input", side_effect=["01.04.2023"])

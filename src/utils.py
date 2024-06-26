@@ -13,9 +13,7 @@ file_handler = logging.FileHandler(
     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/views.log",
     encoding="utf-8",
 )
-file_formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
-)
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
@@ -53,9 +51,7 @@ def get_valid_date():
 А также могу вывести топ-5 транзакций по сумме платежа, курс валют (USD, EUR) и стоимост акций из S&P500!"""
     )
     while True:
-        input_date = input(
-            "Для этого введите дату в формате дд.мм.гггг за период 2018 - 2021: "
-        ).strip()
+        input_date = input("Для этого введите дату в формате дд.мм.гггг за период 2018 - 2021: ").strip()
         try:
             datetime_obj = datetime.strptime(input_date, "%d.%m.%Y")
             if 2018 <= datetime_obj.year <= 2021:
@@ -73,11 +69,7 @@ def get_transactions_by_date(transactions, date):
     start_date = first_day_of_month.strftime("%d.%m.%Y")
     end_date = date[:10]
 
-    filtered_transactions = [
-        trans
-        for trans in transactions
-        if start_date <= trans["Дата операции"][:10] <= end_date
-    ]
+    filtered_transactions = [trans for trans in transactions if start_date <= trans["Дата операции"][:10] <= end_date]
 
     transaction_details = []
 
@@ -86,9 +78,7 @@ def get_transactions_by_date(transactions, date):
         amount = trans["Сумма операции"]
         cashback = calculate_cashback(amount)
 
-        transaction_details.append(
-            {"last_dijits": number_card, "total_spent": amount, "cashback": cashback}
-        )
+        transaction_details.append({"last_dijits": number_card, "total_spent": amount, "cashback": cashback})
 
     return transaction_details
 

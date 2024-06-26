@@ -8,9 +8,7 @@ file_handler = logging.FileHandler(
     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/services.log",
     encoding="utf-8",
 )
-file_formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s: %(message)s"
-)
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
@@ -20,9 +18,7 @@ def get_valid_month():
     """Функция для ввода корректного месяца и года."""
     print("Выберите условия для вашей инвесткопилки!")
     while True:
-        input_date = input(
-            "Для этого введите месяц и год в формате гггг-мм за период 2018-2021: "
-        ).strip()
+        input_date = input("Для этого введите месяц и год в формате гггг-мм за период 2018-2021: ").strip()
         try:
             logger.info("Преобразование даты в формат datetime")
             datetime_obj = datetime.strptime(input_date, "%Y-%m")
@@ -67,10 +63,7 @@ def investment_bank(month_start, transactions, limit):
 
         try:
             transaction_date = datetime.strptime(date_str, "%d.%m.%Y")
-            if (
-                transaction_date.year == month_start.year
-                and transaction_date.month == month_start.month
-            ):
+            if transaction_date.year == month_start.year and transaction_date.month == month_start.month:
                 amount = transaction["Сумма операции"]
 
                 if amount >= 0:
