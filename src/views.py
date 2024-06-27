@@ -15,20 +15,17 @@ def data_views():
 
     load_dotenv()
 
-    # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    # my_path_to_user_settings_json = os.path.join(BASE_DIR, 'user_settings.json')
-    my_path_to_user_settings_json = (
-        "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/user_settings.json"
-    )
-    my_path_to_operations_xls = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    my_path_to_user_settings_json = os.path.join(BASE_DIR, "user_settings.json")
+    my_path_to_operations_xls = os.path.join(BASE_DIR, "data", "operations.xls")
+
     MY_API_KEY = os.getenv("API_KEY")
     MY_BASE_URL = os.getenv("BASE_URL")
-    # my_path_to_operations_xls = os.path.join(BASE_DIR, 'data', 'operations.xls')
 
     # Вызываем функцию для получения даты и выводим результат
     my_date = get_valid_date()
     # my_date = "02.02.2018 00:00:00"
-    # my_path_to_operations_xls = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
+
     my_greeting = greeting()
     # print(my_greeting)
     my_transactions = get_data_transactions(my_path_to_operations_xls)
