@@ -4,13 +4,18 @@ from datetime import datetime, timedelta
 import functools
 from read_transactions_excel import get_data_transactions
 import json
+import os
 
 # Настройка логирования
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+path = os.path.join(BASE_DIR, "logs", "reports.log")
+file_handler = logging.FileHandler(path, encoding="utf-8")
 logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(
-    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/reports.log",
-    encoding="utf-8",
-)
+#
+# file_handler = logging.FileHandler(
+#     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/reports.log",
+#     encoding="utf-8",
+# )
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
@@ -110,7 +115,9 @@ def get_valid_date():
 
 
 def my_reports():
-    path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(BASE_DIR, "data", "operations.xls")
+    # path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
     list_trans = get_data_transactions(path)
     transactions = pd.DataFrame(list_trans)
 

@@ -4,17 +4,17 @@ import pandas as pd
 
 import os
 import sys
-
-# Добавляем путь к папке src в sys.path
-src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
-sys.path.insert(0, src_path)
-
 from src.reports import (
     spending_by_category,
     get_unique_categories,
     choose_category,
     get_valid_date,
 )
+
+
+# Добавляем путь к папке src в sys.path
+src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
+sys.path.insert(0, src_path)
 
 
 def test_spending_by_category():

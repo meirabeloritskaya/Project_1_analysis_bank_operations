@@ -2,12 +2,17 @@ from datetime import datetime
 import math
 import logging
 from read_transactions_excel import get_data_transactions
+import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+path = os.path.join(BASE_DIR, "logs", "services.log")
+file_handler = logging.FileHandler(path, encoding="utf-8")
 logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(
-    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/services.log",
-    encoding="utf-8",
-)
+
+# file_handler = logging.FileHandler(
+#     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/services.log",
+#     encoding="utf-8",
+# )
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
@@ -84,7 +89,9 @@ def investment_bank(month_start, transactions, limit):
 
 
 def my_services():
-    path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(BASE_DIR, "data", "operations.xls")
+    # path = "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/data/operations.xls"
     list_trans = get_data_transactions(path)  # Получаем данные транзакций из Excel
 
     month_start = get_valid_month()  # Запрашиваем у пользователя месяц и год

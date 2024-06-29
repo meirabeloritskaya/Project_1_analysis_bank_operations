@@ -2,11 +2,14 @@ import logging
 import os
 import pandas as pd
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+path = os.path.join(BASE_DIR, "logs", "read_transactions_excel.log")
+file_handler = logging.FileHandler(path, encoding="utf-8")
 logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(
-    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/read_transactions_excel.log",
-    encoding="utf-8",
-)
+# file_handler = logging.FileHandler(
+#     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/read_transactions_excel.log",
+#     encoding="utf-8",
+# )
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)

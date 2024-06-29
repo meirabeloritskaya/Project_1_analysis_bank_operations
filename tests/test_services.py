@@ -2,12 +2,11 @@ from datetime import datetime
 from unittest.mock import patch
 import sys
 import os
+from src.services import get_valid_month, get_limit, investment_bank
 
 # Добавляем путь к папке src в sys.path
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
 sys.path.insert(0, src_path)
-
-from src.services import get_valid_month, get_limit, investment_bank
 
 
 def test_get_valid_month():

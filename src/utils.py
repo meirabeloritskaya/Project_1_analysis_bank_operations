@@ -4,15 +4,19 @@ from datetime import datetime
 
 import pandas as pd
 import requests
+import os
 
 import yfinance as yf
 
 
 logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(
-    "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/views.log",
-    encoding="utf-8",
-)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+path = os.path.join(BASE_DIR, "logs", "views.log")
+file_handler = logging.FileHandler(path, encoding="utf-8")
+# file_handler = logging.FileHandler(
+#     "C:/Users/Meira/PycharmProjects/Project_1_analis_bank_operations/logs/views.log",
+#     encoding="utf-8",
+# )
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
