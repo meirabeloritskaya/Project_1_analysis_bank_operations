@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 from datetime import datetime, timedelta
 import functools
-from read_transactions_excel import get_data_transactions
+from src.read_transactions_excel import get_data_transactions
 import json
 import os
 

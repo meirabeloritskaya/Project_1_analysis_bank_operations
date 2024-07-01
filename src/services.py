@@ -1,7 +1,7 @@
 from datetime import datetime
 import math
 import logging
-from read_transactions_excel import get_data_transactions
+from src.read_transactions_excel import get_data_transactions
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
