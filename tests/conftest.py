@@ -175,3 +175,42 @@ def expected_json_result(greeting_msg, transactions_for_json, top_transactions, 
         indent=4,
         ensure_ascii=False,
     )
+
+
+@pytest.fixture
+def valid_month_input():
+    return "2020-05"
+
+
+@pytest.fixture
+def expected_valid_month():
+    return datetime(2020, 5, 1)
+
+
+@pytest.fixture
+def limit_input():
+    return "3"
+
+
+@pytest.fixture
+def expected_limit():
+    return 100
+
+
+@pytest.fixture
+def investment_data():
+    month_start = datetime(2020, 5, 1)
+    transactions = [
+        {"Дата платежа": "01.05.2020", "Сумма операции": -150},
+        {"Дата платежа": "05.05.2020", "Сумма операции": -90},
+        {"Дата платежа": "15.05.2020", "Сумма операции": 100},
+        {"Дата платежа": "25.05.2020", "Сумма операции": -200},
+        {"Дата платежа": "01.06.2020", "Сумма операции": -250},
+    ]
+    limit = 100
+    return month_start, transactions, limit
+
+
+@pytest.fixture
+def expected_savings():
+    return 60

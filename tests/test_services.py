@@ -1,4 +1,3 @@
-from datetime import datetime
 from unittest.mock import patch
 import sys
 import os
@@ -9,33 +8,17 @@ src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
 sys.path.insert(0, src_path)
 
 
-def test_get_valid_month():
+def test_get_valid_month(valid_month_input, expected_valid_month):
     with patch("builtins.input", side_effect=["2020-05"]):
-        expected_date = datetime(2020, 5, 1)
-        assert get_valid_month() == expected_date
+        with patch("builtins.input", side_effect=[valid_month_input]):
+            assert get_valid_month() == expected_valid_month
 
 
-def test_get_limit():
-    with patch("builtins.input", side_effect=["3"]):
-        expected_limit = 100
+def test_get_limit(limit_input, expected_limit):
+    with patch("builtins.input", side_effect=[limit_input]):
         assert get_limit() == expected_limit
 
 
-def test_investment_bank():
-    month_start = datetime(2020, 5, 1)
-    transactions = [
-        {"Дата платежа": "01.05.2020", "Сумма операции": -150},
-        {"Дата платежа": "05.05.2020", "Сумма операции": -90},
-        {"Дата платежа": "15.05.2020", "Сумма операции": 100},
-        {"Дата платежа": "25.05.2020", "Сумма операции": -200},
-        {"Дата платежа": "01.06.2020", "Сумма операции": -250},
-    ]
-    limit = 100
-    expected_savings = 60
+def test_investment_bank(investment_data, expected_savings):
+    month_start, transactions, limit = investment_data
     assert investment_bank(month_start, transactions, limit) == expected_savings
-
-
-if __name__ == "__main__":
-    test_get_valid_month()
-    test_get_limit()
-    test_investment_bank()
