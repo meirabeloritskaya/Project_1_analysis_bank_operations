@@ -81,19 +81,6 @@ def user_stocks():
 
 
 @pytest.fixture
-def greeting_expected():
-    current_time = datetime.now().time()
-    if 5 <= current_time.hour < 12:
-        return "Доброе утро!"
-    elif 12 <= current_time.hour < 18:
-        return "Добрый день!"
-    elif 18 <= current_time.hour < 23:
-        return "Добрый вечер!"
-    else:
-        return "Добрый ночи!"
-
-
-@pytest.fixture
 def expected_top_5():
     return [
         {

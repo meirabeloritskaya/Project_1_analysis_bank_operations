@@ -18,8 +18,19 @@ from src.utils import (
 )
 
 
-def test_greeting(greeting_expected):
-    assert greeting() == greeting_expected
+@pytest.mark.parametrize(
+    "current_time, expected_greeting",
+    [
+        (datetime.strptime("06:00:00", "%H:%M:%S").time(), "Доброе утро!"),
+        (datetime.strptime("13:00:00", "%H:%M:%S").time(), "Добрый день!"),
+        (datetime.strptime("19:00:00", "%H:%M:%S").time(), "Добрый вечер!"),
+        (datetime.strptime("23:00:00", "%H:%M:%S").time(), "Добрый ночи!"),
+    ],
+)
+def test_greeting(current_time, expected_greeting):
+    with patch("src.utils.datetime") as mock_datetime:
+        mock_datetime.now.return_value = datetime.combine(datetime.today(), current_time)
+        assert greeting() == expected_greeting
 
 
 @pytest.mark.parametrize("input_amount, expected_cashback", [(-100, 1), (-50, 0), (100, 0), (0, 0)])
@@ -84,11 +95,21 @@ def test_read_user_settings(user_settings):
         assert read_user_settings(file_path) is None
 
 
+@pytest.mark.parametrize(
+    "api_key, BASE_URL, user_currencies, expected_exchange_rates",
+    [
+        (
+            "dummy_key",
+            "https://dummy_url/",
+            ["USD", "EUR"],
+            [{"currency": "USD", "rate": 76.92}, {"currency": "EUR", "rate": 90.91}],
+        )
+    ],
+)
 @patch("requests.get")
-def test_get_exchange_rate(mock_get, mock_exchange_rate_response, user_currencies, expected_exchange_rates):
-    api_key = "dummy_key"
-    BASE_URL = "https://dummy_url/"
-
+def test_get_exchange_rate(
+    mock_get, mock_exchange_rate_response, api_key, BASE_URL, user_currencies, expected_exchange_rates
+):
     mock_response = MagicMock()
     mock_response.json.return_value = mock_exchange_rate_response
     mock_response.status_code = 200
