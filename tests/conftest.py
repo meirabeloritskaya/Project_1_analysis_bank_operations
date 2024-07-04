@@ -1,6 +1,8 @@
 import pytest
 from datetime import datetime
 import json
+from unittest.mock import patch
+import pandas as pd
 
 
 @pytest.fixture
@@ -214,3 +216,52 @@ def investment_data():
 @pytest.fixture
 def expected_savings():
     return 60
+
+
+@pytest.fixture
+def transactions_data():
+    return pd.DataFrame(
+        [
+            {"Дата операции": "01.01.2023 12:00:00", "Категория": "Еда", "Сумма платежа": -150},
+            {"Дата операции": "05.02.2023 14:00:00", "Категория": "Еда", "Сумма платежа": -90},
+            {"Дата операции": "10.03.2023 16:00:00", "Категория": "Еда", "Сумма платежа": -200},
+            {"Дата операции": "15.04.2023 18:00:00", "Категория": "Еда", "Сумма платежа": -250},
+            {"Дата операции": "01.05.2023 12:00:00", "Категория": "Транспорт", "Сумма платежа": -100},
+        ]
+    )
+
+
+@pytest.fixture
+def expected_spending_by_category():
+    return [
+        {"Дата операции": "01.01.2023 12:00:00", "Категория": "Еда", "Сумма платежа": -150},
+        {"Дата операции": "05.02.2023 14:00:00", "Категория": "Еда", "Сумма платежа": -90},
+        {"Дата операции": "10.03.2023 16:00:00", "Категория": "Еда", "Сумма платежа": -200},
+    ]
+
+
+@pytest.fixture
+def expected_unique_categories():
+    return ["Еда", "Транспорт"]
+
+
+@pytest.fixture
+def category_choice_input():
+    with patch("builtins.input", side_effect=["1"]):
+        yield
+
+
+@pytest.fixture
+def expected_category_choice():
+    return "Еда"
+
+
+@pytest.fixture
+def valid_date_input():
+    with patch("builtins.input", side_effect=["01.04.2023"]):
+        yield
+
+
+@pytest.fixture
+def expected_valid_date():
+    return datetime.strptime("01.04.2023", "%d.%m.%Y")
